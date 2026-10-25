@@ -38,3 +38,28 @@ def test_missing_field_is_rejected():
     bad = load("example_match_result.json")
     del bad["model_version"]
     assert not validator_for("MatchResult").is_valid(bad)
+
+
+
+def test_extras_are_accepted():
+    ok = load("example_match_result.json")
+    ok["extras"] = {"anything": "goes here", "n": 1}
+    assert validator_for("MatchResult").is_valid(ok)
+
+
+def test_unknown_top_level_field_is_rejected():
+    bad = load("example_match_result.json")
+    bad["surprise"] = 1
+    assert not validator_for("MatchResult").is_valid(bad)
+
+
+def test_missing_schema_version_is_rejected():
+    bad = load("example_match_result.json")
+    del bad["schema_version"]
+    assert not validator_for("MatchResult").is_valid(bad)
+
+
+def test_bad_schema_version_is_rejected():
+    bad = load("example_match_result.json")
+    bad["schema_version"] = "v1"
+    assert not validator_for("MatchResult").is_valid(bad)

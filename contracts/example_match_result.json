@@ -1,4 +1,5 @@
 {
+    "schema_version": "1.1",
   "overall_score": 78.4,
   "component_scores": { "tfidf": 0.61, "sbert": 0.83, "skills": 0.75 },
   "weights": { "tfidf": 0.3, "sbert": 0.5, "skills": 0.2 },

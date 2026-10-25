@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "resumeiq/inference_schema.json",
-  "title": "ResumeIQ inference contract v1",
-  "description": "Data exchanged between the backend (M3) and the resumeiq_nlp package (M1). Frozen in Phase 1.",
+  "title": "ResumeIQ inference contract v1.1",
+  "description": "Data exchanged between the backend (M3) and the resumeiq_nlp package (M1). Frozen in Phase 1; v1.1 adds schema_version and extras.",
   "$defs": {
     "Education": {
       "type": "object",
@@ -33,37 +33,44 @@
       "required": ["name"],
       "additionalProperties": false
     },
+    "Unit": { "type": "number", "minimum": 0, "maximum": 1 },
+    "SchemaVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "Extras": { "type": "object" },
     "ParsedResume": {
       "type": "object",
       "properties": {
+        "schema_version": { "$ref": "#/$defs/SchemaVersion" },
         "raw_text": { "type": "string" },
         "skills": { "type": "array", "items": { "type": "string" } },
         "education": { "type": "array", "items": { "$ref": "#/$defs/Education" } },
         "experience": { "type": "array", "items": { "$ref": "#/$defs/Experience" } },
         "projects": { "type": "array", "items": { "$ref": "#/$defs/Project" } },
         "total_experience_years": { "type": "number", "minimum": 0 },
-        "warnings": { "type": "array", "items": { "type": "string" } }
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "extras": { "$ref": "#/$defs/Extras" }
       },
-      "required": ["raw_text", "skills", "education", "experience", "projects", "total_experience_years", "warnings"],
+      "required": ["schema_version", "raw_text", "skills", "education", "experience", "projects", "total_experience_years", "warnings"],
       "additionalProperties": false
     },
     "ParsedJob": {
       "type": "object",
       "properties": {
+        "schema_version": { "$ref": "#/$defs/SchemaVersion" },
         "title": { "type": "string" },
         "raw_text": { "type": "string" },
         "required_skills": { "type": "array", "items": { "type": "string" } },
         "preferred_skills": { "type": "array", "items": { "type": "string" } },
         "min_experience_years": { "type": "number", "minimum": 0 },
-        "education_level": { "type": ["string", "null"] }
+        "education_level": { "type": ["string", "null"] },
+        "extras": { "$ref": "#/$defs/Extras" }
       },
-      "required": ["title", "raw_text", "required_skills", "preferred_skills", "min_experience_years"],
+      "required": ["schema_version", "title", "raw_text", "required_skills", "preferred_skills", "min_experience_years"],
       "additionalProperties": false
     },
-    "Unit": { "type": "number", "minimum": 0, "maximum": 1 },
     "MatchResult": {
       "type": "object",
       "properties": {
+        "schema_version": { "$ref": "#/$defs/SchemaVersion" },
         "overall_score": { "type": "number", "minimum": 0, "maximum": 100 },
         "component_scores": {
           "type": "object",
@@ -99,9 +106,10 @@
         },
         "model_version": { "type": "string", "minLength": 1 },
         "latency_ms": { "type": "number", "minimum": 0 },
-        "warnings": { "type": "array", "items": { "type": "string" } }
+        "warnings": { "type": "array", "items": { "type": "string" } },
+        "extras": { "$ref": "#/$defs/Extras" }
       },
-      "required": ["overall_score", "component_scores", "weights", "matched_skills", "missing_skills", "explanation", "model_version", "latency_ms", "warnings"],
+      "required": ["schema_version", "overall_score", "component_scores", "weights", "matched_skills", "missing_skills", "explanation", "model_version", "latency_ms", "warnings"],
       "additionalProperties": false
     }
   }
