@@ -1,0 +1,21 @@
+# Python environment and caches
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# IDE
+.idea/
+.vscode/
+
+# Secrets and local data
+.env
+*.db
+uploads/
+
+# ML / frontend outputs
+mlruns/
+node_modules/
+dist/
