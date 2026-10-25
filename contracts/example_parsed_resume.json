@@ -1,0 +1,9 @@
+{
+  "raw_text": "Data analyst with 3 years of experience in Python, SQL and Docker.",
+  "skills": ["python", "sql", "docker"],
+  "education": [{ "degree": "B.Tech Computer Science", "institution": "KL University", "year": 2024 }],
+  "experience": [{ "title": "Data Analyst", "company": "Acme Corp", "duration_months": 36 }],
+  "projects": [{ "name": "Churn predictor", "description": "Built a churn model with scikit-learn." }],
+  "total_experience_years": 3,
+  "warnings": []
+}

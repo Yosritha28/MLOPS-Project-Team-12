@@ -1,0 +1,8 @@
+{
+  "title": "Data Engineer",
+  "raw_text": "We need a data engineer with Python, SQL, Docker and Kubernetes.",
+  "required_skills": ["python", "sql", "docker", "kubernetes"],
+  "preferred_skills": ["airflow"],
+  "min_experience_years": 2,
+  "education_level": "Bachelor"
+}
