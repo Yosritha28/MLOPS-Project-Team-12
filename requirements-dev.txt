@@ -2,3 +2,4 @@
 -e ./ai_nlp
 pytest>=8.0
 httpx>=0.27
+jsonschema>=4.21
