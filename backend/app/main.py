@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.api import auth
+from app.api import admin_config, auth, config, jobs, resumes
 
 API_PREFIX = "/api/v1"
 
@@ -21,3 +21,7 @@ def health():
 
 
 app.include_router(auth.router, prefix=API_PREFIX)
+app.include_router(config.router, prefix=API_PREFIX)
+app.include_router(admin_config.router, prefix=API_PREFIX)
+app.include_router(resumes.router, prefix=API_PREFIX)
+app.include_router(jobs.router, prefix=API_PREFIX)
