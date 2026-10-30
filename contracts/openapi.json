@@ -192,6 +192,32 @@
         "title": "ApplyRequest",
         "type": "object"
       },
+      "Body_quick_match_file_api_v1_analysis_quick_match_file_post": {
+        "properties": {
+          "job_text": {
+            "minLength": 20,
+            "title": "Job Text",
+            "type": "string"
+          },
+          "job_title": {
+            "minLength": 1,
+            "title": "Job Title",
+            "type": "string"
+          },
+          "resume_file": {
+            "contentMediaType": "application/octet-stream",
+            "title": "Resume File",
+            "type": "string"
+          }
+        },
+        "required": [
+          "resume_file",
+          "job_title",
+          "job_text"
+        ],
+        "title": "Body_quick_match_file_api_v1_analysis_quick_match_file_post",
+        "type": "object"
+      },
       "Body_upload_resume_api_v1_resumes_post": {
         "properties": {
           "file": {
@@ -1292,6 +1318,34 @@
           "page_size"
         ],
         "title": "Page[UserOut]",
+        "type": "object"
+      },
+      "QuickMatchRequest": {
+        "properties": {
+          "job_text": {
+            "description": "The job description as plain text",
+            "minLength": 20,
+            "title": "Job Text",
+            "type": "string"
+          },
+          "job_title": {
+            "minLength": 1,
+            "title": "Job Title",
+            "type": "string"
+          },
+          "resume_text": {
+            "description": "The resume as plain text",
+            "minLength": 20,
+            "title": "Resume Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "resume_text",
+          "job_title",
+          "job_text"
+        ],
+        "title": "QuickMatchRequest",
         "type": "object"
       },
       "RegisterRequest": {
@@ -3050,6 +3104,108 @@
           }
         ],
         "summary": "Match one of my resumes against a job (nothing is saved)",
+        "tags": [
+          "analysis"
+        ]
+      }
+    },
+    "/api/v1/analysis/quick-match": {
+      "post": {
+        "operationId": "quick_match_api_v1_analysis_quick_match_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuickMatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Match pasted resume text against a job description (real AI result)",
+        "tags": [
+          "analysis"
+        ]
+      }
+    },
+    "/api/v1/analysis/quick-match-file": {
+      "post": {
+        "operationId": "quick_match_file_api_v1_analysis_quick_match_file_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_quick_match_file_api_v1_analysis_quick_match_file_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "File larger than 5 MB"
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Only PDF, DOCX or TXT is accepted"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "No readable text in the file"
+          }
+        },
+        "summary": "Match an uploaded resume (PDF, DOCX or TXT) against a job description",
         "tags": [
           "analysis"
         ]

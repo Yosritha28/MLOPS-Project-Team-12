@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ResumeIQ - resume match demo</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#14213d;--muted:#5b6785;--line:#dfe5f1;--accent:#2f5d9e;--good:#1e8e5a;--bad:#c2410c;--goodbg:#e6f6ee;--badbg:#fdeee6}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1626;--card:#18223a;--text:#e8edf8;--muted:#9aa7c7;--line:#2a3757;--accent:#7aa7e8;--good:#4cc98a;--bad:#f59a6b;--goodbg:#10382a;--badbg:#3b2418}}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text)}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+header h1{margin:8px 0 0;font-size:1.6rem}
+header p{margin:4px 0 16px;color:var(--muted)}
+.grid{display:grid;gap:16px}
+@media (min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+h2{font-size:1.05rem;margin:0 0 10px}
+label{display:block;font-weight:600;margin:10px 0 4px}
+textarea,input[type=text]{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}
+textarea{min-height:150px;resize:vertical}
+.tabs{display:flex;gap:8px;margin-bottom:6px}
+.tab,.btn{font:inherit;min-height:44px;border-radius:10px;border:1px solid var(--line);padding:0 16px;cursor:pointer;background:var(--bg);color:var(--text)}
+.tab[aria-selected=true]{border-color:var(--accent);color:var(--accent);font-weight:700}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
+.btn:disabled{opacity:.6;cursor:wait}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.muted{color:var(--muted)}
+.err{margin-top:12px;padding:10px;border-radius:10px;background:var(--badbg);color:var(--bad)}
+.hero{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ring{width:120px;height:120px;position:relative;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800}
+.ring .num small{font-size:.7rem;font-weight:500;color:var(--muted)}
+.bar{margin:8px 0}
+.bar .top{display:flex;justify-content:space-between;font-size:.9rem}
+.track{height:10px;border-radius:6px;background:var(--line);overflow:hidden}
+.fill{height:100%;background:var(--accent);border-radius:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:3px 10px;border-radius:999px;font-size:.85rem}
+.chip.good{background:var(--goodbg);color:var(--good)}
+.chip.bad{background:var(--badbg);color:var(--bad)}
+ul{margin:6px 0;padding-left:20px}
+.meta{font-size:.8rem;color:var(--muted);margin-top:12px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>ResumeIQ</h1>
+  <p>AI resume and job matching. Works the same on desktop and mobile browsers. (Demo page: the full React app comes next.)</p>
+</header>
+<div class="grid">
+  <section class="card">
+    <h2>1. Resume</h2>
+    <div class="tabs" role="tablist">
+      <button class="tab" id="tab-text" role="tab" aria-selected="true" onclick="setMode('text')">Paste text</button>
+      <button class="tab" id="tab-file" role="tab" aria-selected="false" onclick="setMode('file')">Upload file</button>
+    </div>
+    <div id="pane-text"><label for="resume">Resume text</label><textarea id="resume" placeholder="Paste the resume here"></textarea></div>
+    <div id="pane-file" hidden><label for="file">PDF, DOCX or TXT (max 5 MB)</label><input type="file" id="file" accept=".pdf,.docx,.txt"></div>
+    <h2 style="margin-top:18px">2. Job</h2>
+    <label for="title">Job title</label><input type="text" id="title" placeholder="e.g. Data Engineer">
+    <label for="job">Job description</label><textarea id="job" placeholder="Paste the job description. Words like 'Preferred:' start the nice-to-have skills."></textarea>
+    <div class="row">
+      <button class="btn primary" id="go" onclick="analyze()">Analyze match</button>
+      <button class="btn" onclick="loadSample()">Load sample</button>
+    </div>
+    <div id="error" class="err" hidden></div>
+  </section>
+  <section class="card" id="result" aria-live="polite">
+    <h2>Result</h2>
+    <p class="muted" id="placeholder">Your score, skill gaps and explanation appear here.</p>
+    <div id="out" hidden>
+      <div class="hero">
+        <div class="ring">
+          <svg width="120" height="120" viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--line)" stroke-width="10"/><circle id="arc" cx="60" cy="60" r="52" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+          <div class="num"><span id="score">0</span><small>out of 100</small></div>
+        </div>
+        <p id="summary" style="flex:1;min-width:200px;margin:0"></p>
+      </div>
+      <h2 style="margin-top:16px">Score breakdown</h2>
+      <div id="bars"></div>
+      <h2 style="margin-top:16px">Skills you match</h2><div class="chips" id="matched"></div>
+      <h2 style="margin-top:16px">Required skills missing</h2><div class="chips" id="missing"></div>
+      <h2 style="margin-top:16px">Strengths</h2><ul id="strengths"></ul>
+      <h2 style="margin-top:16px">Gaps</h2><ul id="gaps"></ul>
+      <div id="warnings" class="muted"></div>
+      <div class="meta" id="meta"></div>
+    </div>
+  </section>
+</div>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+let mode = "text";
+const SAMPLE = {
+  resume: "Data engineer with 4 years of experience. Built ETL pipelines with Python, SQL, Airflow and Spark on AWS. Deployed services with Docker and Kubernetes. Worked with PostgreSQL and Git. B.Tech in Computer Science.",
+  title: "Data Engineer",
+  job: "We need a data engineer to build and maintain data pipelines. Required: Python, SQL, Airflow, Docker and AWS. Preferred: Kafka, Kubernetes, Terraform. Minimum 3 years of experience."
+};
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+function setMode(m) {
+  mode = m;
+  $("pane-text").hidden = m !== "text"; $("pane-file").hidden = m !== "file";
+  $("tab-text").setAttribute("aria-selected", String(m === "text")); $("tab-file").setAttribute("aria-selected", String(m === "file"));
+}
+function loadSample() { setMode("text"); $("resume").value = SAMPLE.resume; $("title").value = SAMPLE.title; $("job").value = SAMPLE.job; }
+function showError(msg) { const e = $("error"); e.textContent = msg; e.hidden = !msg; }
+function errorText(body, status) {
+  if (body && typeof body.detail === "string") return body.detail;
+  if (body && Array.isArray(body.detail)) return body.detail.map((d) => d.msg).join("; ");
+  return "Request failed (" + status + ").";
+}
+function chips(box, items, cls, empty) {
+  box.replaceChildren();
+  if (!items.length) { box.appendChild(el("span", "muted", empty)); return; }
+  items.forEach((s) => box.appendChild(el("span", "chip " + cls, s)));
+}
+function bullets(box, items, empty) {
+  box.replaceChildren();
+  if (!items.length) { box.appendChild(el("li", "muted", empty)); return; }
+  items.forEach((s) => box.appendChild(el("li", "", s)));
+}
+function render(r) {
+  $("placeholder").hidden = true; $("out").hidden = false;
+  $("score").textContent = Math.round(r.overall_score);
+  $("arc").style.strokeDashoffset = String(326.7 * (1 - r.overall_score / 100));
+  $("summary").textContent = r.explanation.summary;
+  const bars = $("bars"); bars.replaceChildren();
+  [["tfidf", "TF-IDF text similarity"], ["sbert", "SBERT meaning similarity"], ["skills", "Skill overlap"]].forEach(([k, name]) => {
+    const used = r.weights[k] > 0;
+    const row = el("div", "bar"), top = el("div", "top"), track = el("div", "track"), fill = el("div", "fill");
+    top.appendChild(el("span", "", name));
+    top.appendChild(el("span", "muted", used ? Math.round(r.component_scores[k] * 100) + "%  (weight " + Math.round(r.weights[k] * 100) + "%)" : "not used"));
+    fill.style.width = (used ? r.component_scores[k] * 100 : 0) + "%";
+    track.appendChild(fill); row.appendChild(top); row.appendChild(track); bars.appendChild(row);
+  });
+  chips($("matched"), r.matched_skills, "good", "None of the job's skills were found.");
+  chips($("missing"), r.missing_skills, "bad", "Nothing missing.");
+  bullets($("strengths"), r.explanation.strengths, "No standout strengths found.");
+  bullets($("gaps"), r.explanation.gaps, "No gaps found.");
+  $("warnings").textContent = r.warnings.join(" ");
+  $("meta").textContent = "Model " + r.model_version + " | " + r.latency_ms + " ms | contract v" + r.schema_version;
+}
+async function analyze() {
+  showError("");
+  const title = $("title").value.trim(), job = $("job").value.trim();
+  const btn = $("go"); btn.disabled = true; btn.textContent = "Analyzing...";
+  try {
+    let res;
+    if (mode === "text") {
+      res = await fetch("/api/v1/analysis/quick-match", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ resume_text: $("resume").value, job_title: title, job_text: job })
+      });
+    } else {
+      const f = $("file").files[0];
+      if (!f) { showError("Choose a resume file first."); return; }
+      const fd = new FormData();
+      fd.append("resume_file", f); fd.append("job_title", title); fd.append("job_text", job);
+      res = await fetch("/api/v1/analysis/quick-match-file", { method: "POST", body: fd });
+    }
+    const body = await res.json().catch(() => null);
+    if (!res.ok) { showError(errorText(body, res.status)); return; }
+    render(body);
+  } catch (e) {
+    showError("Could not reach the server. Is it running?");
+  } finally {
+    btn.disabled = false; btn.textContent = "Analyze match";
+  }
+}
+loadSample();
+</script>
+</body>
+</html>
