@@ -1,0 +1,25 @@
+{
+  "description": "Small hand-labelled sample: relevant resumes per job. Version this file with DVC.",
+  "resumes": [
+    {"id": "r1", "label": "data engineer", "text": "Data engineer with 4 years of experience building ETL pipelines in Python and SQL using Airflow and Spark on AWS. Stored data in PostgreSQL and streamed events with Kafka. Deployed jobs with Docker. B.Tech in Computer Science."},
+    {"id": "r2", "label": "junior data engineer", "text": "Junior data engineer with 2 years of experience. Wrote SQL transformations, Python scripts and Airflow DAGs, and worked with Hadoop and MySQL. Familiar with Git and Linux. Bachelor degree in information technology."},
+    {"id": "r3", "label": "ml engineer", "text": "Machine learning engineer with 3 years of experience. Trained deep learning models with PyTorch and TensorFlow, built NLP pipelines using spaCy and NLTK, and tracked experiments in MLflow. Python, pandas, numpy and scikit-learn. M.Tech in artificial intelligence."},
+    {"id": "r4", "label": "data scientist", "text": "Data scientist with 5 years of experience in machine learning, data analysis and data visualization. Python, pandas, scikit-learn, XGBoost, SQL and Tableau. Built churn and demand forecasting models. Master degree in statistics."},
+    {"id": "r5", "label": "frontend developer", "text": "Frontend developer with 3 years of experience building responsive web apps with React, TypeScript, JavaScript, HTML and CSS using Tailwind CSS. Consumed REST APIs and wrote unit testing suites. Used Git and Figma. B.Tech in Computer Science."},
+    {"id": "r6", "label": "devops engineer", "text": "DevOps engineer with 5 years of experience automating CI/CD with Jenkins and GitHub Actions, running containers with Docker and Kubernetes, and managing infrastructure with Terraform on AWS and Azure. Monitoring with Prometheus and Grafana. Linux and bash scripting. Bachelor degree."},
+    {"id": "r7", "label": "marketing", "text": "Digital marketing executive with 4 years of experience in SEO, content marketing, social media marketing and email marketing. Reported campaign results with Google Analytics. MBA in marketing."},
+    {"id": "r8", "label": "java backend", "text": "Backend developer with 4 years of experience in Java, Spring Boot and REST APIs with MySQL and Redis. Deployed with Jenkins. Bachelor degree in computer science."},
+    {"id": "r9", "label": "analytics engineer (few named skills)", "text": "Analytics engineer with 3 years of experience designing data warehouse models, scheduling nightly batch workflows and building reliable reporting datasets on cloud platforms. Strong in relational databases and query tuning. Bachelor degree in computer applications."},
+    {"id": "r10", "label": "backend developer (skills overlap, wrong role)", "text": "Backend software engineer with 4 years of experience building web services with Python, Django and REST APIs. Used SQL databases, Docker, AWS and Git. Wrote unit testing suites and handled customer support tickets. B.Tech in Computer Science."},
+    {"id": "r11", "label": "vue frontend developer", "text": "Frontend engineer with 3 years of experience building single page applications with Vue.js, TypeScript, JavaScript, HTML and CSS. Designed accessible interfaces and collaborated with designers in Figma. Bachelor degree."},
+    {"id": "r12", "label": "data analyst (related, not ML)", "text": "Data analyst with 3 years of experience in data analysis and data visualization using Python, SQL, pandas and Tableau. Prepared weekly dashboards and ad hoc reports for sales teams. Bachelor degree in statistics."}
+  ],
+  "jobs": [
+    {"id": "j1", "title": "Data Engineer", "text": "We are hiring a data engineer to build and maintain data pipelines. Required: Python, SQL, Airflow, Spark and AWS. Experience with Docker is expected. Preferred: Kafka, PostgreSQL. Minimum 2 years of experience. Bachelor degree."},
+    {"id": "j2", "title": "Machine Learning Engineer", "text": "Looking for a machine learning engineer to build NLP models and ship them to production. Required: Python, machine learning, deep learning, PyTorch, scikit-learn. Preferred: MLflow, spaCy, NLTK, Docker. Minimum 3 years of experience."},
+    {"id": "j3", "title": "Frontend Developer", "text": "We need a frontend developer for our web platform. Required: React, TypeScript, JavaScript, HTML, CSS. Preferred: Tailwind CSS, Figma, REST API integration. Minimum 2 years of experience."},
+    {"id": "j4", "title": "DevOps Engineer", "text": "DevOps engineer needed to run our cloud platform. Required: Docker, Kubernetes, CI/CD, Terraform, AWS, Linux. Preferred: Prometheus, Grafana, Jenkins, GitHub Actions. Minimum 3 years of experience."}
+  ],
+  "relevant": {"j1": ["r1", "r2", "r9"], "j2": ["r3", "r4"], "j3": ["r5", "r11"], "j4": ["r6"]}
+}
+
